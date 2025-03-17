@@ -1,5 +1,6 @@
-name: Ruff
+name: CI
 on: [push, pull_request]
+
 jobs:
   ruff:
     runs-on: ubuntu-latest
@@ -7,13 +8,24 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/ruff-action@v3
         with:
-          args: check --fix # Enables auto-formatting
-  strategy:
-    matrix:
-      os: [ubuntu-latest, windows-latest]
+          args: check --fix # Enables auto-formatting and linting
+
+  run_files:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest] # Runs on both Ubuntu & Windows
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run Python File
-        run: python *.py
+      - name: Find and Run New Python Files
+        shell: bash
+        run: |
+          NEW_FILES=$(git diff --name-only --diff-filter=A HEAD^ HEAD | grep '\.py$' || true)
+          if [[ -n "$NEW_FILES" ]]; then
+            echo "Running new Python files:"
+            echo "$NEW_FILES"
+            echo "$NEW_FILES" | xargs -I {} python {}
+          else
+            echo "No new Python files found."
+          fi
