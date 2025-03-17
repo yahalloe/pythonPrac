@@ -1,5 +1,6 @@
 class Solution:
-    def reverseString(self, s: list[str]) -> None:
+    @staticmethod
+    def reverseString(s: list[str]) -> None:
         # Do not return anything, modify s in-place instead.
         left = 0
         right = len(s) - 1
@@ -12,9 +13,8 @@ class Solution:
             right -= 1
 
 
-test = Solution()
 s: list[str] = ["h", "a", "l", "l", "o"]
 
 print(f"before test {s}")
-test.reverseString(s)
+Solution.reverseString(s)
 print(f"after test {s}")
