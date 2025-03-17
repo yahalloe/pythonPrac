@@ -8,4 +8,12 @@ jobs:
       - uses: astral-sh/ruff-action@v3
         with:
           args: check --fix # Enables auto-formatting
+  strategy:
+    matrix:
+      os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
 
+      - name: Run Python File
+        run: python *.py
